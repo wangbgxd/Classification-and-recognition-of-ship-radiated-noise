@@ -1,10 +1,10 @@
 warning off            
 close all               
-clear                 
+% clear                 
 clc                     
-
-%%  导入数据
-load WEFDEα
+tic
+% %%  导入数据
+load WEFDEα_ShipsEar
 %%  划分训练集和测试集
 %%  分析数据
 num_class = length(unique(res(:, end)));  % 类别数（Excel最后一列放类别）
@@ -56,33 +56,33 @@ p_test  =  double(reshape(P_test , 12, 1, 1, N));
 layers = [
  imageInputLayer([12, 1, 1])                               
  
- convolution2dLayer([2, 1], 16, 'Padding', 'same')        
+ convolution2dLayer([3, 1], 16, 'Padding', 'same')        
  batchNormalizationLayer                                    
  reluLayer                                               
  
 %  maxPooling2dLayer([2, 1], 'Stride', [2, 1])               
- convolution2dLayer([2, 1], 32, 'Padding', 'same')         
+ convolution2dLayer([3, 1], 32, 'Padding', 'same')         
  batchNormalizationLayer                                  
  reluLayer                                               
 
 %   maxPooling2dLayer([2, 1], 'Stride', [2, 1])            
 
- convolution2dLayer([2, 1], 32, 'Padding', 'same')         
+ convolution2dLayer([3, 1], 32, 'Padding', 'same')         
  batchNormalizationLayer                                  
  reluLayer                                               
  
- fullyConnectedLayer(6)                                     
+ fullyConnectedLayer(4)                                     
  softmaxLayer                                             
  classificationLayer];                                    
 
 %%  参数设置
 options = trainingOptions('adam', ...      
-    'MaxEpochs', 400, ...                 
+    'MaxEpochs', 50, ...                 
     'InitialLearnRate', 1e-3, ...          
     'L2Regularization', 1e-4, ...          
     'LearnRateSchedule', 'piecewise', ... 
     'LearnRateDropFactor', 0.1, ...       
-    'LearnRateDropPeriod', 390, ...        
+    'LearnRateDropPeriod', 3900, ...        
     'Shuffle', 'every-epoch', ...         
     'ValidationPatience', Inf, ...         
     'Plots', 'training-progress', ...      
@@ -98,7 +98,7 @@ t_sim2 = predict(net, p_test );
 %%  反归一化
 T_sim1 = vec2ind(t_sim1');
 T_sim2 = vec2ind(t_sim2');
-load result
+load WEFDEα_ShipsEar_result
 %%  性能评价
 error1 = sum((T_sim1 == T_train)) / M * 100 ;
 error2 = sum((T_sim2 == T_test )) / N * 100 ;
@@ -146,3 +146,4 @@ cm = confusionchart(T_test, T_sim2);
 cm.Title = 'Confusion Matrix for Test Data';
 cm.ColumnSummary = 'column-normalized';
 cm.RowSummary = 'row-normalized';
+toc

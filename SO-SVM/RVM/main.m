@@ -1,10 +1,10 @@
 clc  
-clear         
+% clear         
 close all              
 warning off                   
-                  
+tic               
 %%  导入数据
-load WEFDEα
+load WEFDEα_ShipsEar
 %%  划分训练集和测试集
 %%  分析数据
 num_class = length(unique(res(:, end)));  % 类别数（Excel最后一列放类别）
@@ -48,7 +48,7 @@ t_train = T_train;
 t_test  = T_test ;
 
 %%  创建模型
-num = 6;        
+num = 4;        
 model = 'sig';  
 [IW, B, LW, TF, TYPE] = RVM(p_train, t_train, num, model, 1);
 
@@ -61,7 +61,7 @@ T_sim2 = elmpredict(p_test , IW, B, LW, TF, TYPE);
 
 T_sim1 = T_sim1(index_1);
 T_sim2 = T_sim2(index_2);
-load result
+load WEFDEα_ShipsEar_result
 %%  性能评价
 error1 = sum((T_sim1 == T_train)) / M * 100 ;
 error2 = sum((T_sim2 == T_test )) / N * 100 ;
@@ -97,3 +97,4 @@ cm = confusionchart(T_test, T_sim2);
 cm.Title = 'Confusion Matrix for Test Data';
 cm.ColumnSummary = 'column-normalized';
 cm.RowSummary = 'row-normalized';
+toc

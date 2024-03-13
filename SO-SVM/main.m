@@ -3,7 +3,7 @@ warning off             % 关闭报警信息
 close all               % 关闭开启的图窗
 clear                   % 清空变量
 clc                     % 清空命令行
-
+tic
 %%  导入数据
 % load FDE
 % load EFDE
@@ -13,8 +13,8 @@ clc                     % 清空命令行
 % load SSD-WEFDEα
 % load FE
 % load SE
-% load Marine organism signal recognition
-load WEFDEα
+% load WEFDEα_Deepship
+load WEFDEα_ShipsEar
 %%  分析数据
 num_class = length(unique(res(:, end)));  % 类别数（Excel最后一列放类别）
 num_res = size(res, 1);                   % 样本数（每一行，是一个样本）
@@ -80,7 +80,7 @@ model = libsvmtrain(T_train, P_train, cmd);
 [T_sim1, accuracy1,decision_values] = libsvmpredict(T_train, P_train, model);
 [T_sim2, accuracy2,decision_values] = libsvmpredict(T_test, P_test, model);
 %% 性能评价
-load WEFDEα_result.mat
+load WEFDEα_ShipsEar_result
 error1 = sum((T_sim1 == T_train))/M * 100 ;
 error2 = sum((T_sim2 == T_test))/N * 100 ;
 
@@ -117,3 +117,4 @@ cm = confusionchart(T_test, T_sim2);
 cm.Title = 'Confusion Matrix for Test Data';
 cm.ColumnSummary = 'column-normalized';
 cm.RowSummary = 'row-normalized';
+toc

@@ -3,9 +3,9 @@ warning off             % 关闭报警信息
 close all               % 关闭开启的图窗
 clear                   % 清空变量
 clc                     % 清空命令行
-
+tic
 %%  导入数据
-load WEFDEα
+load WEFDEα_ShipsEar
 
 %%  划分训练集和测试集
 
@@ -76,13 +76,13 @@ layers = [ ...
   reluLayer                         
   lstmLayer(64, 'OutputMode', 'last') 
   reluLayer                         
-  fullyConnectedLayer(6)            
+  fullyConnectedLayer(4)            
   softmaxLayer                      
   classificationLayer];
 
 %%  参数设置
 options = trainingOptions('adam', ...       
-    'MaxEpochs', 400, ...                  
+    'MaxEpochs', 200, ...                  
     'InitialLearnRate', 0.01, ...          
     'LearnRateSchedule', 'piecewise', ...  
     'LearnRateDropFactor', 0.1, ...        
@@ -102,13 +102,13 @@ t_sim2 = predict(net, p_test );
 %%  数据反归一化
 T_sim1 = vec2ind(t_sim1');
 T_sim2 = vec2ind(t_sim2');
-load result
+load WEFDEα_ShipsEar_result
 %%  性能评价
 error1 = sum((T_sim1 == T_train)) / M * 100 ;
 error2 = sum((T_sim2 == T_test )) / N * 100 ;
 
 %%  查看网络结构
-analyzeNetwork(net)
+% analyzeNetwork(net)
 
 %%  数据排序
 [T_train, index_1] = sort(T_train);
@@ -150,3 +150,4 @@ cm = confusionchart(T_test, T_sim2);
 cm.Title = 'Confusion Matrix for Test Data';
 cm.ColumnSummary = 'column-normalized';
 cm.RowSummary = 'row-normalized';
+toc
