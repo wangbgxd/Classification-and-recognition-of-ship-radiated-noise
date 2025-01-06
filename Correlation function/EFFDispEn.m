@@ -255,8 +255,11 @@ npdf=pdf_sary/(5*(N-(m-1)*tau));
 p=npdf(npdf~=0);
 [r2,c2]=size(p);
 a=0.1;
+aa=(-1)^(a);
+shibu=real(aa);
+xubu=imag(aa);
 for q=1:c2
-    Out(1,q)=(0.9511 *sum(p(q)^a .* log(p(q))))+((-1)^(1/2))*(( 0.3090*sum(p(q)^a .* log(p(q)))));
+    Out(1,q)=(shibu *sum(p(q)^a .* log(p(q))))+((-1)^(1/2))*(( xubu*sum(p(q)^a .* log(p(q)))));
 end
 for q=1:c2
     a(1,q)=real(Out(1,q));
